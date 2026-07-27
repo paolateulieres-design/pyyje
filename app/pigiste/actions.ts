@@ -7,7 +7,8 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 // WF1 — Envoi d'un pitch.
-// formData contient : titre, resume, angle, et pour chaque rédaction cochée
+// formData contient : titre, resume (« Présentation du sujet » — fusionne
+// résumé et angle depuis la revue produit), et pour chaque rédaction cochée
 // redaction_<id> = "on" et rubrique_<id> = "<rubrique choisie>".
 export async function createPitchAction(formData: FormData) {
   const { userId } = await requireRole(["pigiste"]);
@@ -15,7 +16,6 @@ export async function createPitchAction(formData: FormData) {
 
   const titre = String(formData.get("titre") || "");
   const resume = String(formData.get("resume") || "");
-  const angle = String(formData.get("angle") || "");
 
   const redactionIds: { id: string; rubrique: string }[] = [];
   for (const [key, value] of formData.entries()) {
@@ -35,7 +35,6 @@ export async function createPitchAction(formData: FormData) {
     .insert({
       titre,
       resume,
-      angle,
       auteur: userId,
       date_creation: new Date().toISOString(),
       statut: "envoye",

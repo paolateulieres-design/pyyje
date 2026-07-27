@@ -20,12 +20,14 @@ export default function NouveauPitchForm({
         <input name="titre" required className="input" />
       </div>
       <div>
-        <label className="label">Résumé (l&apos;idée)</label>
-        <textarea name="resume" required rows={3} className="input" />
-      </div>
-      <div>
-        <label className="label">Angle (ce qui est original)</label>
-        <textarea name="angle" rows={2} className="input" />
+        <label className="label">Présentation du sujet</label>
+        <textarea
+          name="resume"
+          required
+          rows={4}
+          className="input"
+          placeholder="De quoi s'agit-il ? Quelle est l'originalité de votre angle ?"
+        />
       </div>
 
       <div>

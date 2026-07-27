@@ -44,8 +44,10 @@ export default async function PitchEnvoiDetailPage({
       <span className="badge badge-blue mt-2">{STATUT_LABELS[envoi.statut] || envoi.statut}</span>
 
       <div className="card mt-4 max-w-2xl space-y-2">
-        <p className="text-sm text-gray-700"><strong>Résumé :</strong> {pitch.resume}</p>
-        <p className="text-sm text-gray-700"><strong>Angle :</strong> {pitch.angle}</p>
+        <p className="text-sm text-gray-700"><strong>Présentation du sujet :</strong> {pitch.resume}</p>
+        {pitch.angle && (
+          <p className="text-sm text-gray-700"><strong>Angle :</strong> {pitch.angle}</p>
+        )}
         <p className="text-sm text-gray-500">Rubrique ciblée : {envoi.rubrique_ciblee}</p>
       </div>
 
