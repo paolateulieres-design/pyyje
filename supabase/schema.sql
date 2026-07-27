@@ -167,15 +167,39 @@ create policy "profiles_insert_self" on public.profiles
 create policy "profiles_update_self_or_admin" on public.profiles
   for update using (auth.uid() = id or public.is_admin());
 
+-- Fonctions SECURITY DEFINER : contournent RLS pour ces vérifications
+-- internes afin d'éviter toute récursion croisée entre pitches, pitch_envois
+-- et bons_de_commande (les policies de ces 3 tables se référencent entre
+-- elles — sans ces fonctions, Postgres lève "infinite recursion detected").
+create or replace function public.is_pitch_owner(p_pitch_id uuid)
+returns boolean language sql security definer stable set search_path = public as $$
+  select exists (select 1 from public.pitches where id = p_pitch_id and auteur = auth.uid());
+$$;
+
+create or replace function public.pitch_has_envoi_for(p_pitch_id uuid, p_redaction_id uuid)
+returns boolean language sql security definer stable set search_path = public as $$
+  select exists (select 1 from public.pitch_envois where pitch = p_pitch_id and redaction = p_redaction_id);
+$$;
+
+create or replace function public.envoi_pitch_owner(p_envoi_id uuid)
+returns boolean language sql security definer stable set search_path = public as $$
+  select exists (
+    select 1 from public.pitch_envois pe
+    join public.pitches p on p.id = pe.pitch
+    where pe.id = p_envoi_id and p.auteur = auth.uid()
+  );
+$$;
+
+grant execute on function public.is_pitch_owner(uuid) to authenticated;
+grant execute on function public.pitch_has_envoi_for(uuid, uuid) to authenticated;
+grant execute on function public.envoi_pitch_owner(uuid) to authenticated;
+
 -- PITCHES ------------------------------------------------------------------
 create policy "pitches_select" on public.pitches
   for select using (
     auteur = auth.uid()
     or public.is_admin()
-    or exists (
-      select 1 from public.pitch_envois pe
-      where pe.pitch = pitches.id and pe.redaction = auth.uid()
-    )
+    or public.pitch_has_envoi_for(pitches.id, auth.uid())
   );
 
 create policy "pitches_insert_own" on public.pitches
@@ -185,10 +209,7 @@ create policy "pitches_update" on public.pitches
   for update using (
     auteur = auth.uid()
     or public.is_admin()
-    or exists (
-      select 1 from public.pitch_envois pe
-      where pe.pitch = pitches.id and pe.redaction = auth.uid()
-    )
+    or public.pitch_has_envoi_for(pitches.id, auth.uid())
   );
 
 -- PITCH_ENVOIS ---------------------------------------------------------------
@@ -198,19 +219,19 @@ create policy "pitch_envois_select" on public.pitch_envois
   for select using (
     redaction = auth.uid()
     or public.is_admin()
-    or exists (select 1 from public.pitches p where p.id = pitch_envois.pitch and p.auteur = auth.uid())
+    or public.is_pitch_owner(pitch_envois.pitch)
   );
 
 create policy "pitch_envois_insert" on public.pitch_envois
   for insert with check (
-    exists (select 1 from public.pitches p where p.id = pitch_envois.pitch and p.auteur = auth.uid())
+    public.is_pitch_owner(pitch_envois.pitch)
   );
 
 create policy "pitch_envois_update" on public.pitch_envois
   for update using (
     redaction = auth.uid()
     or public.is_admin()
-    or exists (select 1 from public.pitches p where p.id = pitch_envois.pitch and p.auteur = auth.uid())
+    or public.is_pitch_owner(pitch_envois.pitch)
   );
 
 -- BONS_DE_COMMANDE -----------------------------------------------------------
@@ -219,11 +240,7 @@ create policy "bdc_select" on public.bons_de_commande
     redaction = auth.uid()
     or pigiste = auth.uid()
     or public.is_admin()
-    or exists (
-      select 1 from public.pitch_envois pe
-      join public.pitches p on p.id = pe.pitch
-      where pe.id = bons_de_commande.pitch_envoi and p.auteur = auth.uid()
-    )
+    or (pitch_envoi is not null and public.envoi_pitch_owner(pitch_envoi))
   );
 
 create policy "bdc_insert" on public.bons_de_commande
@@ -234,11 +251,7 @@ create policy "bdc_update" on public.bons_de_commande
     redaction = auth.uid()
     or pigiste = auth.uid()
     or public.is_admin()
-    or exists (
-      select 1 from public.pitch_envois pe
-      join public.pitches p on p.id = pe.pitch
-      where pe.id = bons_de_commande.pitch_envoi and p.auteur = auth.uid()
-    )
+    or (pitch_envoi is not null and public.envoi_pitch_owner(pitch_envoi))
   );
 
 -- ARTICLES ---------------------------------------------------------------

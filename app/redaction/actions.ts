@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/auth-helpers";
 import { notify } from "@/lib/notifications";
+import { uploadAvatar } from "@/lib/storage";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import crypto from "crypto";
@@ -227,15 +228,20 @@ export async function updateRedactionProfileAction(formData: FormData) {
     .map((s) => s.trim())
     .filter(Boolean);
 
-  await supabase
-    .from("profiles")
-    .update({
-      nom_media: String(formData.get("nom_media") || ""),
-      site_web: String(formData.get("site_web") || ""),
-      logo: String(formData.get("logo") || "") || null,
-      rubriques,
-    })
-    .eq("id", userId);
+  const update: Record<string, unknown> = {
+    nom_media: String(formData.get("nom_media") || ""),
+    site_web: String(formData.get("site_web") || ""),
+    rubriques,
+  };
+
+  const logoFile = formData.get("logo_file") as File | null;
+  if (logoFile && logoFile.size > 0) {
+    const { url, error } = await uploadAvatar(supabase, userId, logoFile, "logo");
+    if (error) redirect(`/redaction/profil?error=${encodeURIComponent(error)}`);
+    if (url) update.logo = url;
+  }
+
+  await supabase.from("profiles").update(update).eq("id", userId);
 
   revalidatePath("/redaction/profil");
 }

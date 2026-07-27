@@ -36,6 +36,12 @@ export default async function ConnexionPage({
           </button>
         </form>
 
+        <p className="mt-3 text-sm">
+          <Link href="/mot-de-passe-oublie" className="text-brand-600">
+            Mot de passe oublié ?
+          </Link>
+        </p>
+
         <p className="mt-4 text-sm text-gray-500">
           Pas encore de compte ?{" "}
           <Link href="/inscription" className="text-brand-600 font-medium">

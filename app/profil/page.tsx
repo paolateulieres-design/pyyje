@@ -1,10 +1,16 @@
 import AppShell from "@/components/AppShell";
 import { requireUser } from "@/lib/auth-helpers";
 import { navLinksFor } from "@/lib/nav";
-import { updateProfileAction } from "./actions";
+import { updateProfileAction, updatePasswordAction } from "./actions";
+import Link from "next/link";
 
-export default async function ProfilPage() {
+export default async function ProfilPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string; pwd_error?: string; pwd_ok?: string }>;
+}) {
   const { profile } = await requireUser();
+  const { error, pwd_error, pwd_ok } = await searchParams;
 
   return (
     <AppShell profile={profile} navLinks={navLinksFor(profile.type_compte)}>
@@ -20,6 +26,11 @@ export default async function ProfilPage() {
         <div className="mt-4 rounded-lg bg-red-50 p-4 text-sm text-red-800">
           Votre compte n&apos;est pas (ou plus) validé. Contactez l&apos;administrateur.
         </div>
+      )}
+      {error && (
+        <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+          Erreur : {decodeURIComponent(error)}
+        </p>
       )}
 
       <form action={updateProfileAction} className="card mt-6 max-w-xl space-y-4">
@@ -41,8 +52,12 @@ export default async function ProfilPage() {
               </div>
             </div>
             <div>
-              <label className="label">Photo (URL)</label>
-              <input name="photo" defaultValue={profile.photo || ""} className="input" placeholder="https://..." />
+              <label className="label">Photo</label>
+              {profile.photo && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={profile.photo} alt="" className="mb-2 h-16 w-16 rounded-full object-cover" />
+              )}
+              <input type="file" name="photo_file" accept="image/*" className="input" />
             </div>
             <div>
               <label className="label">Bio</label>
@@ -76,47 +91,70 @@ export default async function ProfilPage() {
               <input name="num_carte_presse" defaultValue={profile.num_carte_presse || ""} className="input" />
             </div>
             <div>
-              <label className="label">
-                Fiche de renseignement (lien vers le PDF — coordonnées, sécu, carte de
-                presse, RIB, CI…)
-              </label>
-              <input
-                name="fiche_renseignement"
-                defaultValue={profile.fiche_renseignement || ""}
-                className="input"
-                placeholder="https://..."
-              />
+              <label className="label">Fiche de renseignement (PDF)</label>
+              <p className="mb-1 text-xs text-gray-500">
+                Coordonnées, sécurité sociale, carte de presse, RIB, CI... Document confidentiel,
+                stocké de façon sécurisée et visible uniquement par vous et la rédaction avec
+                laquelle vous travaillez.
+              </p>
+              {profile.fiche_renseignement && (
+                <p className="mb-1 text-xs text-green-700">✓ Fiche déjà envoyée</p>
+              )}
+              <input type="file" name="fiche_file" accept="application/pdf" className="input" />
               <p className="mt-1 text-xs text-gray-500">
-                Obligatoire avant de pouvoir soumettre un article. Pas de pitch bloqué sans elle.
+                Obligatoire pour soumettre un article. Les pitchs ne sont pas bloqués.
               </p>
             </div>
           </>
         )}
 
         {profile.type_compte === "redaction" && (
-          <>
-            <div>
-              <label className="label">Nom du média</label>
-              <input name="nom_media" defaultValue={profile.nom_media || ""} className="input" />
-            </div>
-            <div>
-              <label className="label">Logo (URL)</label>
-              <input name="logo" defaultValue={profile.logo || ""} className="input" />
-            </div>
-            <div>
-              <label className="label">Site web</label>
-              <input name="site_web" defaultValue={profile.site_web || ""} className="input" />
-            </div>
-            <p className="text-xs text-gray-500">
-              La liste des rubriques se gère depuis « Profil média &amp; rubriques ».
-            </p>
-          </>
+          <p className="text-sm text-gray-500">
+            Le nom du média, le logo, le site web et les rubriques se gèrent depuis{" "}
+            <Link href="/redaction/profil" className="font-medium text-brand-600 underline">
+              Profil média &amp; rubriques
+            </Link>
+            .
+          </p>
         )}
 
         <button type="submit" className="btn-primary">
           Enregistrer
         </button>
       </form>
+
+      <div className="card mt-6 max-w-xl">
+        <h2 className="font-semibold text-gray-900">Changer de mot de passe</h2>
+
+        {pwd_ok && (
+          <p className="mt-2 rounded-lg bg-green-50 p-3 text-sm text-green-800">
+            Mot de passe mis à jour.
+          </p>
+        )}
+        {pwd_error && (
+          <p className="mt-2 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+            {pwd_error === "trop_court"
+              ? "Le mot de passe doit faire au moins 6 caractères."
+              : pwd_error === "mismatch"
+              ? "Les deux mots de passe ne correspondent pas."
+              : decodeURIComponent(pwd_error)}
+          </p>
+        )}
+
+        <form action={updatePasswordAction} className="mt-4 space-y-3">
+          <div>
+            <label className="label">Nouveau mot de passe</label>
+            <input type="password" name="password" required minLength={6} className="input" />
+          </div>
+          <div>
+            <label className="label">Confirmer le mot de passe</label>
+            <input type="password" name="password_confirm" required minLength={6} className="input" />
+          </div>
+          <button type="submit" className="btn-secondary">
+            Mettre à jour le mot de passe
+          </button>
+        </form>
+      </div>
     </AppShell>
   );
 }

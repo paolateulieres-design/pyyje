@@ -16,8 +16,12 @@ export default async function RedactionProfilPage() {
           <input name="nom_media" defaultValue={profile.nom_media || ""} className="input" />
         </div>
         <div>
-          <label className="label">Logo (URL)</label>
-          <input name="logo" defaultValue={profile.logo || ""} className="input" />
+          <label className="label">Logo</label>
+          {profile.logo && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={profile.logo} alt="" className="mb-2 h-16 w-16 rounded object-contain" />
+          )}
+          <input type="file" name="logo_file" accept="image/*" className="input" />
         </div>
         <div>
           <label className="label">Site web</label>

@@ -4,6 +4,7 @@ import { navLinksFor } from "@/lib/nav";
 import { createClient } from "@/lib/supabase/server";
 import { STATUT_LABELS } from "@/lib/types";
 import { addCommentAction, validateArticleAction, togglePaiementAction } from "../../actions";
+import { getFicheSignedUrl } from "@/lib/storage";
 import { redirect } from "next/navigation";
 
 export default async function RelectureArticlePage({
@@ -41,6 +42,10 @@ export default async function RelectureArticlePage({
         .single()
     : { data: null };
 
+  const ficheUrl = pigisteProfile?.fiche_renseignement
+    ? await getFicheSignedUrl(supabase, pigisteProfile.fiche_renseignement)
+    : null;
+
   return (
     <AppShell profile={profile} navLinks={navLinksFor("redaction")}>
       <h1 className="text-xl font-semibold text-gray-900">
@@ -51,12 +56,12 @@ export default async function RelectureArticlePage({
       {pigisteProfile && (
         <p className="mt-2 text-sm text-gray-500">
           Pigiste : {pigisteProfile.prenom} {pigisteProfile.nom}
-          {pigisteProfile.fiche_renseignement && (
+          {ficheUrl && (
             <>
               {" "}
               ·{" "}
               <a
-                href={pigisteProfile.fiche_renseignement}
+                href={ficheUrl}
                 target="_blank"
                 className="text-brand-600 underline"
               >

@@ -48,8 +48,23 @@ export default async function PitchsRecusPage({
       </div>
 
       <div className="mt-6 space-y-2">
-        {(envois || []).length === 0 && (
-          <p className="text-sm text-gray-500">Aucun pitch pour ces filtres.</p>
+        {(envois || []).length === 0 && !statut && (
+          <div className="card text-sm text-gray-500">
+            <p>
+              Aucun pitch reçu pour le moment. Complétez votre{" "}
+              <Link href="/redaction/profil" className="text-brand-600 underline">
+                profil média &amp; rubriques
+              </Link>{" "}
+              pour être plus facilement identifiée par les pigistes, ou parcourez{" "}
+              <Link href="/redaction/pigistes" className="text-brand-600 underline">
+                l&apos;annuaire des pigistes
+              </Link>{" "}
+              pour commissionner directement un sujet.
+            </p>
+          </div>
+        )}
+        {(envois || []).length === 0 && statut && (
+          <p className="text-sm text-gray-500">Aucun pitch pour ce filtre.</p>
         )}
         {(envois || []).map((e) => {
           const pitch = pitchMap.get(e.pitch);

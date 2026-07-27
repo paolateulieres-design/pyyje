@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import LogoutButton from "@/components/LogoutButton";
+import SidebarNav from "@/components/SidebarNav";
 import type { Profile } from "@/lib/types";
 
 export default async function AppShell({
@@ -30,32 +31,7 @@ export default async function AppShell({
         <Link href="/" className="mb-8 block text-lg font-semibold text-brand-700">
           PYYJE
         </Link>
-        <nav className="space-y-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="block rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-brand-50 hover:text-brand-700"
-            >
-              {link.label}
-            </Link>
-          ))}
-          <Link
-            href="/notifications"
-            className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-brand-50 hover:text-brand-700"
-          >
-            Notifications
-            {!!unread && (
-              <span className="badge badge-red">{unread}</span>
-            )}
-          </Link>
-          <Link
-            href="/profil"
-            className="block rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-brand-50 hover:text-brand-700"
-          >
-            Mon profil
-          </Link>
-        </nav>
+        <SidebarNav navLinks={navLinks} unreadCount={unread || 0} />
       </aside>
       <div className="flex-1">
         <header className="flex items-center justify-between border-b border-gray-100 bg-white px-8 py-4">

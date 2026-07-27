@@ -26,9 +26,12 @@ export default async function MesPitchsPage() {
 
       <div className="mt-6 space-y-3">
         {(pitches || []).length === 0 && (
-          <p className="text-sm text-gray-500">
-            Vous n&apos;avez pas encore envoyé de pitch.
-          </p>
+          <div className="card text-sm text-gray-500">
+            <p>Vous n&apos;avez pas encore envoyé de pitch.</p>
+            <Link href="/pigiste/pitchs/nouveau" className="btn-primary mt-3 inline-flex text-xs">
+              Proposer mon premier pitch
+            </Link>
+          </div>
         )}
         {(pitches || []).map((p) => (
           <Link
