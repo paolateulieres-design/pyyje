@@ -6,6 +6,7 @@ import { STATUT_LABELS } from "@/lib/types";
 import { addCommentAction, validateArticleAction, togglePaiementAction } from "../../actions";
 import { getFicheSignedUrl } from "@/lib/storage";
 import { redirect } from "next/navigation";
+import SubmitButton from "@/components/SubmitButton";
 
 export default async function RelectureArticlePage({
   params,
@@ -112,11 +113,11 @@ export default async function RelectureArticlePage({
             <input type="hidden" name="article_id" value={latest.id} />
             <label className="label">Demander des corrections</label>
             <textarea name="texte" rows={3} className="input" required placeholder="Votre commentaire..." />
-            <button className="btn-secondary">Envoyer et demander des corrections</button>
+            <SubmitButton className="btn-secondary">Envoyer et demander des corrections</SubmitButton>
           </form>
 
           <form action={validateArticleAction.bind(null, latest.id)}>
-            <button className="btn-primary w-full">Valider l&apos;article</button>
+            <SubmitButton className="btn-primary w-full">Valider l&apos;article</SubmitButton>
           </form>
         </div>
       )}
@@ -131,9 +132,9 @@ export default async function RelectureArticlePage({
 
       {latest.statut === "valide" && (ficheUrl || bc.paiement_effectue) && (
         <form action={togglePaiementAction.bind(null, bc.id, !bc.paiement_effectue)} className="mt-6">
-          <button className={bc.paiement_effectue ? "btn-secondary" : "btn-primary"}>
+          <SubmitButton className={bc.paiement_effectue ? "btn-secondary" : "btn-primary"}>
             {bc.paiement_effectue ? "Paiement marqué effectué ✓ (annuler)" : "Marquer le paiement comme effectué"}
-          </button>
+          </SubmitButton>
         </form>
       )}
     </AppShell>

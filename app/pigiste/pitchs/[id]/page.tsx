@@ -6,6 +6,7 @@ import { STATUT_LABELS } from "@/lib/types";
 import { acceptOfferAction } from "../../actions";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import SubmitButton from "@/components/SubmitButton";
 
 export default async function PitchDetailPage({
   params,
@@ -85,7 +86,7 @@ export default async function PitchDetailPage({
                 <p className="text-sm text-gray-600">{o.nb_signes} signes</p>
                 {o.notes && <p className="mt-1 text-xs text-gray-500">{o.notes}</p>}
                 <form action={acceptOfferAction.bind(null, o.id)} className="mt-3">
-                  <button className="btn-primary w-full">Accepter cette offre</button>
+                  <SubmitButton className="btn-primary w-full">Accepter cette offre</SubmitButton>
                 </form>
               </div>
             ))}

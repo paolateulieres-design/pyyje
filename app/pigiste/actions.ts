@@ -189,13 +189,16 @@ export async function submitArticleAction(formData: FormData) {
 
   const nextVersion = (last?.version || 0) + 1;
 
-  await supabase.from("articles").insert({
+  const { error } = await supabase.from("articles").insert({
     bon_de_commande: bonDeCommandeId,
     contenu,
     version: nextVersion,
     date_soumission: new Date().toISOString(),
     statut: "soumis",
   });
+  if (error) {
+    redirect(`/pigiste/article/${bonDeCommandeId}?erreur=${encodeURIComponent(error.message)}`);
+  }
 
   await notify(
     supabase,
@@ -205,4 +208,5 @@ export async function submitArticleAction(formData: FormData) {
   );
 
   revalidatePath(`/pigiste/article/${bonDeCommandeId}`);
+  redirect(`/pigiste/article/${bonDeCommandeId}?soumis=1`);
 }

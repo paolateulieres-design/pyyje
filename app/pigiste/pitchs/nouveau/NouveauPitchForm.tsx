@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import SubmitButton from "@/components/SubmitButton";
 
 type Redaction = { id: string; nom_media: string; rubriques: string[] | null };
 
@@ -66,9 +67,9 @@ export default function NouveauPitchForm({
         </div>
       </div>
 
-      <button type="submit" className="btn-primary">
+      <SubmitButton className="btn-primary">
         Envoyer le pitch
-      </button>
+      </SubmitButton>
     </form>
   );
 }

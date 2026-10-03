@@ -1,6 +1,7 @@
 import Link from "next/link";
 import PublicHeader from "@/components/PublicHeader";
 import { signInAction } from "./actions";
+import SubmitButton from "@/components/SubmitButton";
 
 export default async function ConnexionPage({
   searchParams,
@@ -31,9 +32,9 @@ export default async function ConnexionPage({
             <label className="label">Mot de passe</label>
             <input type="password" name="password" required className="input" />
           </div>
-          <button type="submit" className="btn-primary w-full">
+          <SubmitButton className="btn-primary w-full">
             Se connecter
-          </button>
+          </SubmitButton>
         </form>
 
         <p className="mt-3 text-sm">

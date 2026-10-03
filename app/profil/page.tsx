@@ -4,14 +4,15 @@ import { navLinksFor } from "@/lib/nav";
 import { updateProfileAction, updatePasswordAction } from "./actions";
 import { SPECIALITES } from "@/lib/specialites";
 import Link from "next/link";
+import SubmitButton from "@/components/SubmitButton";
 
 export default async function ProfilPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; pwd_error?: string; pwd_ok?: string }>;
+  searchParams: Promise<{ error?: string; pwd_error?: string; pwd_ok?: string; enregistre?: string }>;
 }) {
   const { profile } = await requireUser();
-  const { error, pwd_error, pwd_ok } = await searchParams;
+  const { error, pwd_error, pwd_ok, enregistre } = await searchParams;
 
   return (
     <AppShell profile={profile} navLinks={navLinksFor(profile.type_compte)}>
@@ -27,6 +28,11 @@ export default async function ProfilPage({
         <div className="mt-4 rounded-lg bg-red-50 p-4 text-sm text-red-800">
           Votre compte n&apos;est pas (ou plus) validé. Contactez l&apos;administrateur.
         </div>
+      )}
+      {enregistre && (
+        <p className="mt-4 rounded-lg bg-green-50 p-3 text-sm text-green-800">
+          ✓ Profil enregistré.
+        </p>
       )}
       {error && (
         <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
@@ -132,9 +138,9 @@ export default async function ProfilPage({
           </p>
         )}
 
-        <button type="submit" className="btn-primary">
+        <SubmitButton className="btn-primary">
           Enregistrer
-        </button>
+        </SubmitButton>
       </form>
 
       <div className="card mt-6 max-w-xl">
@@ -164,9 +170,9 @@ export default async function ProfilPage({
             <label className="label">Confirmer le mot de passe</label>
             <input type="password" name="password_confirm" required minLength={6} className="input" />
           </div>
-          <button type="submit" className="btn-secondary">
+          <SubmitButton className="btn-secondary">
             Mettre à jour le mot de passe
-          </button>
+          </SubmitButton>
         </form>
       </div>
     </AppShell>

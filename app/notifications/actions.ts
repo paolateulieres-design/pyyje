@@ -12,7 +12,7 @@ export async function markReadAction(id: string) {
     .update({ lue: true })
     .eq("id", id)
     .eq("destinataire", userId);
-  revalidatePath("/notifications");
+  revalidatePath("/", "layout");
 }
 
 export async function markAllReadAction() {
@@ -23,5 +23,5 @@ export async function markAllReadAction() {
     .update({ lue: true })
     .eq("destinataire", userId)
     .eq("lue", false);
-  revalidatePath("/notifications");
+  revalidatePath("/", "layout");
 }

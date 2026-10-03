@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import PublicHeader from "@/components/PublicHeader";
 import { signUpAction } from "./actions";
+import SubmitButton from "@/components/SubmitButton";
 
 export default function InscriptionPage() {
   return (
@@ -86,9 +87,9 @@ function InscriptionForm() {
             <input type="password" name="password" required minLength={6} className="input" />
           </div>
 
-          <button type="submit" className="btn-primary w-full">
+          <SubmitButton className="btn-primary w-full">
             Créer mon compte
-          </button>
+          </SubmitButton>
         </form>
 
         <p className="mt-4 text-xs text-gray-500">

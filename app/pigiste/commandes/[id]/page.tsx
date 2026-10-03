@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { STATUT_LABELS } from "@/lib/types";
 import { respondCommissionAction } from "../../actions";
 import { redirect } from "next/navigation";
+import SubmitButton from "@/components/SubmitButton";
 
 // Accessible même si le compte pigiste est encore "en_attente" — cf. WF0
 // étape 4 : le pigiste doit pouvoir consulter la proposition qui lui est
@@ -67,10 +68,10 @@ export default async function CommandeDetailPage({
       {bc.statut === "propose" && (
         <div className="mt-6 flex gap-3">
           <form action={respondCommissionAction.bind(null, bc.id, "accepte")}>
-            <button className="btn-primary">Accepter</button>
+            <SubmitButton className="btn-primary">Accepter</SubmitButton>
           </form>
           <form action={respondCommissionAction.bind(null, bc.id, "refuse")}>
-            <button className="btn-danger">Refuser</button>
+            <SubmitButton className="btn-danger">Refuser</SubmitButton>
           </form>
         </div>
       )}

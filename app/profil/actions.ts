@@ -56,6 +56,7 @@ export async function updateProfileAction(formData: FormData) {
   }
 
   revalidatePath("/profil");
+  redirect("/profil?enregistre=1");
 }
 
 export async function updatePasswordAction(formData: FormData) {

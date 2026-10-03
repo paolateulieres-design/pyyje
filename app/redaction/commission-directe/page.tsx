@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { STATUT_LABELS } from "@/lib/types";
 import { createDirectCommissionAction } from "../actions";
 import Link from "next/link";
+import SubmitButton from "@/components/SubmitButton";
 
 // Libellés spécifiques à l'historique des commissions directes : une fois
 // acceptée, on affiche "En cours" plutôt que "Accepté" tant que l'article
@@ -99,7 +100,7 @@ export default async function CommissionDirectePage({
           <label className="label">Notes (optionnel)</label>
           <textarea name="notes" className="input" rows={3} />
         </div>
-        <button className="btn-primary w-full">Envoyer la proposition</button>
+        <SubmitButton className="btn-primary w-full">Envoyer la proposition</SubmitButton>
       </form>
 
       <h2 className="mt-10 text-lg font-semibold text-gray-900">

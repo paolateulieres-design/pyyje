@@ -3,6 +3,7 @@ import { requireRole } from "@/lib/auth-helpers";
 import { navLinksFor } from "@/lib/nav";
 import { createClient } from "@/lib/supabase/server";
 import { activateAccountAction, refuseAccountAction } from "./actions";
+import SubmitButton from "@/components/SubmitButton";
 
 export default async function AdminDashboard() {
   const { profile } = await requireRole(["admin"]);
@@ -37,10 +38,10 @@ export default async function AdminDashboard() {
             </div>
             <div className="flex gap-2">
               <form action={activateAccountAction.bind(null, u.id)}>
-                <button className="btn-primary">Activer</button>
+                <SubmitButton className="btn-primary">Activer</SubmitButton>
               </form>
               <form action={refuseAccountAction.bind(null, u.id)}>
-                <button className="btn-danger">Refuser</button>
+                <SubmitButton className="btn-danger">Refuser</SubmitButton>
               </form>
             </div>
           </div>

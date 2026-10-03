@@ -2,13 +2,25 @@ import AppShell from "@/components/AppShell";
 import { requireRole } from "@/lib/auth-helpers";
 import { navLinksFor } from "@/lib/nav";
 import { updateRedactionProfileAction } from "../actions";
+import SubmitButton from "@/components/SubmitButton";
 
-export default async function RedactionProfilPage() {
+export default async function RedactionProfilPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ enregistre?: string }>;
+}) {
   const { profile } = await requireRole(["redaction"]);
+  const { enregistre } = await searchParams;
 
   return (
     <AppShell profile={profile} navLinks={navLinksFor("redaction")}>
       <h1 className="text-xl font-semibold text-gray-900">Profil média &amp; rubriques</h1>
+
+      {enregistre && (
+        <p className="mt-4 rounded-lg bg-green-50 p-3 text-sm text-green-800">
+          ✓ Profil enregistré.
+        </p>
+      )}
 
       <form action={updateRedactionProfileAction} className="card mt-6 max-w-xl space-y-4">
         <div>
@@ -39,9 +51,9 @@ export default async function RedactionProfilPage() {
             placeholder="Société, Culture, Politique, Économie"
           />
         </div>
-        <button type="submit" className="btn-primary">
+        <SubmitButton className="btn-primary">
           Enregistrer
-        </button>
+        </SubmitButton>
       </form>
     </AppShell>
   );

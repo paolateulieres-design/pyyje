@@ -286,4 +286,5 @@ export async function updateRedactionProfileAction(formData: FormData) {
   await supabase.from("profiles").update(update).eq("id", userId);
 
   revalidatePath("/redaction/profil");
+  redirect("/redaction/profil?enregistre=1");
 }

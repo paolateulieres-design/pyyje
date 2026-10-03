@@ -3,6 +3,7 @@ import { requireRole } from "@/lib/auth-helpers";
 import { navLinksFor } from "@/lib/nav";
 import { createClient } from "@/lib/supabase/server";
 import { suspendAccountAction, reactivateAccountAction } from "../actions";
+import SubmitButton from "@/components/SubmitButton";
 
 export default async function UtilisateursPage({
   searchParams,
@@ -65,11 +66,11 @@ export default async function UtilisateursPage({
                 <td className="px-4 py-2 text-right">
                   {u.statut_compte === "valide" ? (
                     <form action={suspendAccountAction.bind(null, u.id)}>
-                      <button className="btn-danger text-xs">Suspendre</button>
+                      <SubmitButton className="btn-danger text-xs">Suspendre</SubmitButton>
                     </form>
                   ) : (
                     <form action={reactivateAccountAction.bind(null, u.id)}>
-                      <button className="btn-secondary text-xs">Réactiver</button>
+                      <SubmitButton className="btn-secondary text-xs">Réactiver</SubmitButton>
                     </form>
                   )}
                 </td>

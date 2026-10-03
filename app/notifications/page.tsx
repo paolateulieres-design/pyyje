@@ -3,7 +3,7 @@ import { requireUser } from "@/lib/auth-helpers";
 import { navLinksFor } from "@/lib/nav";
 import { createClient } from "@/lib/supabase/server";
 import { markAllReadAction, markReadAction } from "./actions";
-import Link from "next/link";
+import SubmitButton from "@/components/SubmitButton";
 
 export default async function NotificationsPage() {
   const { userId, profile } = await requireUser();
@@ -20,7 +20,7 @@ export default async function NotificationsPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold text-gray-900">Notifications</h1>
         <form action={markAllReadAction}>
-          <button className="btn-secondary text-xs">Tout marquer comme lu</button>
+          <SubmitButton className="btn-secondary text-xs">Tout marquer comme lu</SubmitButton>
         </form>
       </div>
 
@@ -41,13 +41,15 @@ export default async function NotificationsPage() {
             </div>
             <div className="flex items-center gap-2">
               {n.lien && (
-                <Link href={n.lien} className="btn-secondary text-xs">
+                // Lien simple (pas <Link>) : le préchargement marquerait la
+                // notification comme lue sans clic.
+                <a href={`/notifications/${n.id}`} className="btn-secondary text-xs">
                   Voir
-                </Link>
+                </a>
               )}
               {!n.lue && (
                 <form action={markReadAction.bind(null, n.id)}>
-                  <button className="text-xs text-brand-600">Marquer lu</button>
+                  <SubmitButton className="text-xs text-brand-600">Marquer lu</SubmitButton>
                 </form>
               )}
             </div>

@@ -6,6 +6,7 @@ import { STATUT_LABELS } from "@/lib/types";
 import { refusePitchAction, makeOfferAction, markPitchSeenAction } from "../../actions";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import SubmitButton from "@/components/SubmitButton";
 
 export default async function PitchEnvoiDetailPage({
   params,
@@ -111,7 +112,7 @@ export default async function PitchEnvoiDetailPage({
             <form action={refusePitchAction} className="mt-3 space-y-3">
               <input type="hidden" name="envoi_id" value={envoi.id} />
               <textarea name="message_refus" placeholder="Message (optionnel)" className="input" rows={3} />
-              <button className="btn-danger w-full">Refuser ce pitch</button>
+              <SubmitButton className="btn-danger w-full">Refuser ce pitch</SubmitButton>
             </form>
           </div>
 
@@ -139,7 +140,7 @@ export default async function PitchEnvoiDetailPage({
                 <label className="label">Notes (optionnel)</label>
                 <textarea name="notes" className="input" rows={2} />
               </div>
-              <button className="btn-primary w-full">Envoyer l&apos;offre</button>
+              <SubmitButton className="btn-primary w-full">Envoyer l&apos;offre</SubmitButton>
             </form>
           </div>
         </div>

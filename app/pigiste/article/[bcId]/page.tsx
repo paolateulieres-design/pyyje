@@ -5,13 +5,17 @@ import { createClient } from "@/lib/supabase/server";
 import { STATUT_LABELS } from "@/lib/types";
 import { submitArticleAction } from "../../actions";
 import { redirect } from "next/navigation";
+import SubmitButton from "@/components/SubmitButton";
 
 export default async function MonArticlePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ bcId: string }>;
+  searchParams: Promise<{ soumis?: string; erreur?: string }>;
 }) {
   const { bcId } = await params;
+  const { soumis, erreur } = await searchParams;
   const { userId, profile } = await requireRole(["pigiste"]);
   const supabase = await createClient();
 
@@ -55,6 +59,17 @@ export default async function MonArticlePage({
         <span className="badge badge-blue mt-2">{STATUT_LABELS[latest.statut] || latest.statut}</span>
       )}
 
+      {soumis && (
+        <p className="mt-4 max-w-2xl rounded-lg bg-green-50 p-3 text-sm text-green-800">
+          ✓ Article envoyé à la rédaction. Vous serez prévenu·e dès qu&apos;elle l&apos;aura relu.
+        </p>
+      )}
+      {erreur && (
+        <p className="mt-4 max-w-2xl rounded-lg bg-red-50 p-3 text-sm text-red-700">
+          L&apos;article n&apos;a pas pu être envoyé : {decodeURIComponent(erreur)}
+        </p>
+      )}
+
       {ficheManquante && (
         <div className="card mt-6 max-w-2xl border-yellow-200 bg-yellow-50">
           <p className="text-sm text-yellow-800">
@@ -81,9 +96,9 @@ export default async function MonArticlePage({
               required
             />
           </div>
-          <button type="submit" className="btn-primary">
+          <SubmitButton className="btn-primary">
             {latest ? "Re-soumettre" : "Soumettre"}
-          </button>
+          </SubmitButton>
         </form>
       ) : latest ? (
         <div className="card mt-6 max-w-2xl">
