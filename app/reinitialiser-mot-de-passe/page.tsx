@@ -22,9 +22,29 @@ export default function ReinitialiserMotDePassePage() {
     } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") setReady(true);
     });
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) setReady(true);
-    });
+    // Lien "implicit" (cf. mot-de-passe-oublie/actions.ts) : les jetons
+    // arrivent dans le fragment de l'URL, on ouvre la session avec.
+    const hash = new URLSearchParams(window.location.hash.slice(1));
+    const access_token = hash.get("access_token");
+    const refresh_token = hash.get("refresh_token");
+    if (access_token && refresh_token) {
+      supabase.auth.setSession({ access_token, refresh_token }).then(({ error }) => {
+        window.history.replaceState(null, "", window.location.pathname);
+        if (error) {
+          setErrorMsg("Ce lien a expiré ou a déjà été utilisé. Demandez-en un nouveau.");
+          setStatus("error");
+        } else {
+          setReady(true);
+        }
+      });
+    } else if (hash.get("error")) {
+      setErrorMsg("Ce lien a expiré ou a déjà été utilisé. Demandez-en un nouveau.");
+      setStatus("error");
+    } else {
+      supabase.auth.getSession().then(({ data }) => {
+        if (data.session) setReady(true);
+      });
+    }
     return () => subscription.unsubscribe();
   }, []);
 

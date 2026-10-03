@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import PublicHeader from "@/components/PublicHeader";
-import { createClient } from "@/lib/supabase/client";
+import { requestPasswordResetAction } from "./actions";
 
 export default function MotDePasseOubliePage() {
   const [email, setEmail] = useState("");
@@ -19,12 +19,9 @@ export default function MotDePasseOubliePage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const supabase = createClient();
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reinitialiser-mot-de-passe`,
-    });
+    const { error } = await requestPasswordResetAction(email);
     if (error) {
-      setErrorMsg(error.message);
+      setErrorMsg(error);
       setStatus("error");
     } else {
       setStatus("sent");

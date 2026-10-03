@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import RecoveryRedirect from "@/components/RecoveryRedirect";
 
 export const metadata: Metadata = {
   title: "PYYJE — Plateforme Piges",
@@ -13,7 +14,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className="min-h-screen">{children}</body>
+      <body className="min-h-screen">
+        <RecoveryRedirect />
+        {children}
+      </body>
     </html>
   );
 }
