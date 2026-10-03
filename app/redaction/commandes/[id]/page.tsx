@@ -66,8 +66,11 @@ export default async function CommandeDetailRedactionPage({
         ← Offres & commandes
       </Link>
       <h1 className="mt-2 text-xl font-semibold text-gray-900">
-        {pitch ? `Offre — « ${pitch.titre} »` : "Commission directe"} — {nomPigiste}
+        {pitch?.titre || bc.titre || "Commission directe"}
       </h1>
+      <p className="mt-1 text-sm text-gray-500">
+        {pitch ? "Offre sur pitch" : "Commission directe"} · {nomPigiste}
+      </p>
       {envoi && (
         <Link href={`/redaction/pitchs/${envoi.id}`} className="mt-1 block text-sm text-brand-600 underline">
           Voir le pitch

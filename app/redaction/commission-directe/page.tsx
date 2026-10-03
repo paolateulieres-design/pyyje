@@ -4,6 +4,7 @@ import { navLinksFor } from "@/lib/nav";
 import { createClient } from "@/lib/supabase/server";
 import { STATUT_LABELS } from "@/lib/types";
 import { createDirectCommissionAction } from "../actions";
+import { formatEtSignes } from "@/lib/commandes";
 import Link from "next/link";
 import SubmitButton from "@/components/SubmitButton";
 
@@ -77,6 +78,10 @@ export default async function CommissionDirectePage({
 
       <form action={createDirectCommissionAction} className="card mt-6 max-w-lg space-y-4">
         <div>
+          <label className="label">Sujet de la pige</label>
+          <input name="titre" placeholder="Ex. : Portrait de la nouvelle directrice du Louvre" required className="input" />
+        </div>
+        <div>
           <label className="label">Email du pigiste</label>
           <input type="email" name="email" defaultValue={email || ""} required className="input" />
         </div>
@@ -123,9 +128,14 @@ export default async function CommissionDirectePage({
               className="card flex items-center justify-between gap-4"
             >
               <div>
-                <p className="font-medium text-gray-900">{nomPigiste}</p>
+                <p className="font-medium text-gray-900">
+                  {c.titre || (c.notes ? c.notes.slice(0, 70) : "Commission directe")}
+                </p>
+                <p className="mt-0.5 text-sm font-medium text-encre-clair">
+                  {formatEtSignes(c)}
+                </p>
                 <p className="mt-0.5 text-sm text-gray-500">
-                  Envoyée le{" "}
+                  {nomPigiste} · envoyée le{" "}
                   {new Date(c.date_creation).toLocaleDateString("fr-FR")} ·{" "}
                   {c.prix} €
                 </p>

@@ -94,6 +94,7 @@ export async function createDirectCommissionAction(formData: FormData) {
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const prix = Number(formData.get("prix") || 0);
   const deadline = String(formData.get("deadline") || "");
+  const titre = String(formData.get("titre") || "").trim();
   const format = String(formData.get("format") || "");
   const nb_signes = Number(formData.get("nb_signes") || 0);
   const notes = String(formData.get("notes") || "");
@@ -119,6 +120,7 @@ export async function createDirectCommissionAction(formData: FormData) {
       token_invitation: token,
       prix,
       deadline,
+      titre: titre || null,
       format,
       nb_signes,
       notes: notes || null,
@@ -137,7 +139,7 @@ export async function createDirectCommissionAction(formData: FormData) {
     await notify(
       supabase,
       existingPigiste.id,
-      "Vous avez une nouvelle proposition de pige",
+      titre ? `Nouvelle proposition de pige : « ${titre} »` : "Vous avez une nouvelle proposition de pige",
       `/pigiste/commandes/${bc!.id}`
     );
     redirect(`/redaction/commission-directe?ok=1&bc=${bc!.id}`);
@@ -154,7 +156,7 @@ export async function createDirectCommissionAction(formData: FormData) {
   await sendEmail({
     to: email,
     subject: `${media?.nom_media || "Une rédaction"} vous propose une pige sur PYYJE`,
-    texte: `${media?.nom_media || "Une rédaction"} vous propose une pige (${format}, ${prix} €). Créez votre compte PYYJE pour consulter la proposition et y répondre.`,
+    texte: `${media?.nom_media || "Une rédaction"} vous propose une pige${titre ? ` : « ${titre} »` : ""} (${format}, ${prix} €). Créez votre compte PYYJE pour consulter la proposition et y répondre.`,
     lien: siteUrl(`/invite/${token}`),
     bouton: "Voir la proposition",
   });

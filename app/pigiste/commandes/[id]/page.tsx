@@ -51,8 +51,9 @@ export default async function CommandeDetailPage({
   return (
     <AppShell profile={profile} navLinks={navLinksFor("pigiste")}>
       <h1 className="text-xl font-semibold text-gray-900">
-        Proposition de {redaction?.nom_media || "une rédaction"}
+        {bc.titre || "Proposition de pige"}
       </h1>
+      <p className="mt-1 text-sm text-gray-500">Proposée par {redaction?.nom_media || "une rédaction"}</p>
       <span className="badge badge-blue mt-2">{STATUT_LABELS[bc.statut] || bc.statut}</span>
 
       <div className="card mt-6 max-w-lg space-y-2">

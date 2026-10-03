@@ -2,7 +2,7 @@ import AppShell from "@/components/AppShell";
 import { requireRole } from "@/lib/auth-helpers";
 import { navLinksFor } from "@/lib/nav";
 import { createClient } from "@/lib/supabase/server";
-import { commandesDeLaRedaction, etapeDe, ETAPE_BADGES, ETAPE_LABELS } from "@/lib/commandes";
+import { commandesDeLaRedaction, etapeDe, formatEtSignes, ETAPE_BADGES, ETAPE_LABELS } from "@/lib/commandes";
 import Link from "next/link";
 
 // Historique de toutes les offres envoyées par la rédaction : offres faites
@@ -48,6 +48,7 @@ export default async function OffresCommandesPage() {
             >
               <div>
                 <p className="font-medium text-gray-900">{c.titre}</p>
+                <p className="mt-0.5 text-sm font-medium text-encre-clair">{formatEtSignes(c)}</p>
                 <p className="mt-0.5 text-sm text-gray-500">
                   {nomPigiste} · {c.prix} € · envoyée le{" "}
                   {new Date(c.date_creation).toLocaleDateString("fr-FR")}

@@ -4,13 +4,29 @@ import type { BonDeCommande, StatutArticle } from "@/lib/types";
 // Vue consolidée d'un bon de commande, quelle que soit sa source (offre sur
 // un pitch ou commission directe), avec l'état de l'article associé.
 export type CommandeVue = BonDeCommande & {
-  titre: string; // titre du pitch, ou "Commission directe"
+  titre: string; // titre du pitch, sujet de la commission, ou début des notes
   pitchId: string | null;
   // Pigiste concerné : rattaché au bon de commande, ou auteur du pitch tant
   // que l'offre n'a pas été acceptée.
   pigisteId: string | null;
   dernierArticle: StatutArticle | null;
 };
+
+// Titre d'une commission directe : le sujet saisi, sinon (anciennes
+// commissions) le début des notes.
+function titreCommission(b: BonDeCommande) {
+  if (b.titre) return b.titre;
+  const notes = (b.notes || "").trim();
+  if (!notes) return "Commission directe";
+  return notes.length > 70 ? `${notes.slice(0, 70).trimEnd()}…` : notes;
+}
+
+// "Portrait · 1 000 signes"
+export function formatEtSignes(c: { format: string; nb_signes: number }) {
+  const f = c.format ? c.format.charAt(0).toUpperCase() + c.format.slice(1) : "";
+  const s = c.nb_signes ? `${c.nb_signes.toLocaleString("fr-FR")} signes` : "";
+  return [f, s].filter(Boolean).join(" · ");
+}
 
 export type Etape =
   | "a_repondre"
@@ -83,7 +99,7 @@ async function enrichir(supabase: SupabaseClient, bcs: BonDeCommande[]): Promise
       ...b,
       pitchId,
       pigisteId: b.pigiste || (pitchId && pitchAuteur.get(pitchId)) || null,
-      titre: (pitchId && pitchTitre.get(pitchId)) || "Commission directe",
+      titre: (pitchId && pitchTitre.get(pitchId)) || titreCommission(b),
       dernierArticle: dernier.get(b.id)?.statut || null,
     };
   });

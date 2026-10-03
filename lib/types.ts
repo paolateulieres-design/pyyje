@@ -74,6 +74,7 @@ export interface BonDeCommande {
   format: string;
   nb_signes: number;
   notes: string | null;
+  titre: string | null; // sujet saisi pour une commission directe
   statut: StatutBonDeCommande;
   paiement_effectue: boolean;
   date_creation: string;

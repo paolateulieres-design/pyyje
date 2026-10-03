@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import {
   commandesDuPigiste,
   etapeDe,
+  formatEtSignes,
   ETAPE_BADGES,
   ETAPE_LABELS,
   type CommandeVue,
@@ -87,6 +88,7 @@ export default async function MesCommandesPage() {
                   >
                     <div>
                       <p className="font-medium text-gray-900">{c.titre}</p>
+                      <p className="mt-0.5 text-sm font-medium text-encre-clair">{formatEtSignes(c)}</p>
                       <p className="mt-0.5 text-sm text-gray-500">
                         {nomMedia.get(c.redaction) || "Rédaction"} · {c.prix} € · deadline{" "}
                         {new Date(c.deadline).toLocaleDateString("fr-FR")}
