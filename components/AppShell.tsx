@@ -27,9 +27,12 @@ export default async function AppShell({
 
   return (
     <div className="flex min-h-screen">
-      <aside className="w-64 shrink-0 border-r border-gray-100 bg-white p-5">
-        <Link href="/" className="mb-8 block text-lg font-semibold text-brand-700">
-          PYYJE
+      <aside className="w-64 shrink-0 bg-encre p-5">
+        <Link href="/" className="mb-8 flex items-center gap-2 text-xl font-extrabold tracking-tight text-white">
+          <span aria-hidden className="grid h-7 w-7 place-items-center rounded-lg bg-jaune text-sm text-encre">
+            P
+          </span>
+          pyyje
         </Link>
         <SidebarNav navLinks={navLinks} unreadCount={unread || 0} />
       </aside>

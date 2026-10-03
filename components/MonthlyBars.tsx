@@ -63,7 +63,7 @@ export default function MonthlyBars({
               {h > 0 && (
                 <path
                   d={`M${x},${m.top + ih} V${top + r} Q${x},${top} ${x + r},${top} H${x + bw - r} Q${x + bw},${top} ${x + bw},${top + r} V${m.top + ih} Z`}
-                  fill="#3457d5"
+                  fill="#14304a"
                   className="transition-opacity group-hover:opacity-80"
                 />
               )}
@@ -77,7 +77,7 @@ export default function MonthlyBars({
                   width={124}
                   height={22}
                   rx={4}
-                  fill="#1a1a2e"
+                  fill="#14304a"
                 />
                 <text
                   x={Math.min(Math.max(cx, 62), W - 62)}

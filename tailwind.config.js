@@ -8,17 +8,17 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          50: "#f2f6ff",
-          100: "#e1eaff",
-          500: "#3457d5",
-          600: "#2743b0",
-          700: "#1f3690",
+          // Ramp "encre" : utilisée par tout l'espace connecté.
+          50: "#eef2f7",
+          100: "#dbe4ee",
+          500: "#14304a",
+          600: "#0e2338",
+          700: "#14304a",
         },
-        // Palette de la page d'accueil (chaleureuse, esprit "presse").
-        corail: { DEFAULT: "#ec5f52", fonce: "#d64a3e", pale: "#fdece8" },
-        rose: "#f5b9e6",
-        encre: { DEFAULT: "#1d3b47", clair: "#2d5566" },
-        creme: "#fff7f3",
+        // Palette "Encre et jaune presse" (tout le site).
+        encre: { DEFAULT: "#14304a", clair: "#2a5578", pale: "#eef2f7" },
+        jaune: { DEFAULT: "#ffd84d", fonce: "#f5c518", pale: "#fff6cc" },
+        fond: "#f4f6f9",
       },
       fontFamily: {
         titre: ["var(--font-titre)", "system-ui", "sans-serif"],

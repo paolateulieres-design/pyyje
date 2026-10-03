@@ -37,8 +37,8 @@ function NavItem({
       href={href}
       className={`flex items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors ${
         active
-          ? "bg-brand-50 font-medium text-brand-700"
-          : "text-gray-700 hover:bg-brand-50 hover:text-brand-700"
+          ? "bg-jaune font-medium text-encre"
+          : "text-white/75 hover:bg-white/10 hover:text-white"
       }`}
     >
       {label}

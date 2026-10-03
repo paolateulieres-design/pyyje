@@ -36,10 +36,10 @@ export async function sendEmail({
 
   const url = lien ? (lien.startsWith("http") ? lien : siteUrl(lien)) : siteUrl();
   const html = `
-    <div style="font-family:system-ui,-apple-system,sans-serif;max-width:520px;margin:0 auto;padding:24px;color:#1a1a2e">
-      <p style="font-weight:700;font-size:18px;margin:0 0 24px">PYYJE</p>
+    <div style="font-family:system-ui,-apple-system,sans-serif;max-width:520px;margin:0 auto;padding:24px;color:#14304a">
+      <p style="font-weight:800;font-size:20px;margin:0 0 24px;color:#14304a">pyyje</p>
       <p style="font-size:15px;line-height:1.5;margin:0 0 24px">${escapeHtml(texte)}</p>
-      <a href="${escapeHtml(url)}" style="display:inline-block;background:#3457d5;color:#fff;text-decoration:none;padding:10px 18px;border-radius:8px;font-size:14px">${escapeHtml(bouton)}</a>
+      <a href="${escapeHtml(url)}" style="display:inline-block;background:#ffd84d;color:#14304a;font-weight:600;text-decoration:none;padding:10px 18px;border-radius:999px;font-size:14px">${escapeHtml(bouton)}</a>
       <p style="font-size:12px;color:#888;margin:32px 0 0">Vous recevez cet email car vous avez un compte ou une proposition sur PYYJE.</p>
     </div>`;
 

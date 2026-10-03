@@ -16,7 +16,7 @@ const RUBRIQUES = [
   { nom: "Sport & Lifestyle", formats: ["Comptes rendus", "Portraits", "Tendances"], initiales: ["KM", "HS", "BL"] },
 ];
 
-const COULEURS_AVATAR = ["bg-corail text-white", "bg-rose text-encre", "bg-encre-clair text-white"];
+const COULEURS_AVATAR = ["bg-jaune text-encre", "bg-encre-clair text-white", "bg-encre text-white"];
 
 const GARANTIES = [
   { icone: "🔒", texte: "Pitchs confidentiels" },
@@ -44,25 +44,25 @@ export default function LandingPage() {
       <LandingHeader />
       <main>
         {/* Hero */}
-        <section className="relative overflow-hidden bg-corail">
+        <section className="relative overflow-hidden bg-encre">
           {/* Formes organiques décoratives */}
           <svg
             aria-hidden
             className="pointer-events-none absolute -right-40 -top-20 hidden h-[760px] w-[760px] lg:block"
             viewBox="0 0 600 600"
           >
-            <path d="M420 20c120 60 190 190 160 330S420 600 280 590 20 470 30 320 300-40 420 20z" fill="#f5b9e6" />
-            <path d="M470 120c80 70 110 190 60 290s-170 160-260 120-120-170-80-270 200-210 280-140z" fill="#d64a3e" opacity=".55" />
+            <path d="M420 20c120 60 190 190 160 330S420 600 280 590 20 470 30 320 300-40 420 20z" fill="#ffd84d" />
+            <path d="M470 120c80 70 110 190 60 290s-170 160-260 120-120-170-80-270 200-210 280-140z" fill="#2a5578" />
           </svg>
-          <svg aria-hidden className="pointer-events-none absolute -bottom-32 -left-24 h-80 w-80 opacity-40" viewBox="0 0 200 200">
-            <circle cx="100" cy="100" r="100" fill="#f5b9e6" />
+          <svg aria-hidden className="pointer-events-none absolute -bottom-32 -left-24 h-80 w-80" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="100" fill="#2a5578" />
           </svg>
 
           <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-14 sm:px-6 lg:pb-28 lg:pt-20">
             <div className="max-w-2xl">
               <h1 className="font-titre text-4xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-6xl">
                 La pige, de A à Z.{" "}
-                <span className="inline-block -rotate-1 rounded-2xl bg-rose px-3 text-encre">Sans friction.</span>
+                <span className="inline-block -rotate-1 rounded-2xl bg-jaune px-3 text-encre">Sans friction.</span>
               </h1>
               <p className="mt-6 max-w-xl text-lg text-white/90 sm:text-xl">
                 Les pigistes proposent leurs sujets, les rédactions font leurs offres. Pitch, bon de
@@ -78,7 +78,7 @@ export default function LandingPage() {
           <div className="mx-auto flex max-w-7xl flex-wrap gap-x-10 gap-y-4 px-4 py-6 text-sm text-gray-600 sm:px-6">
             {GARANTIES.map((g) => (
               <p key={g.texte} className="flex items-center gap-3">
-                <span aria-hidden className="grid h-8 w-8 place-items-center rounded-full bg-corail-pale text-corail">
+                <span aria-hidden className="grid h-8 w-8 place-items-center rounded-full bg-jaune-pale text-encre">
                   {g.icone}
                 </span>
                 {g.texte}
@@ -126,11 +126,11 @@ export default function LandingPage() {
         </section>
 
         {/* Pour les rédactions */}
-        <section id="redactions" className="scroll-mt-20 bg-creme py-20 sm:py-24">
+        <section id="redactions" className="scroll-mt-20 bg-fond py-20 sm:py-24">
           <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
             <MockBonDeCommande />
             <div>
-              <p className="text-sm font-semibold uppercase tracking-wider text-corail">Pour les rédactions</p>
+              <p className="text-sm font-semibold uppercase tracking-wider text-encre-clair">Pour les rédactions</p>
               <h2 className="mt-3 font-titre text-3xl font-bold tracking-tight sm:text-4xl">
                 Commandez vos piges en deux clics
               </h2>
@@ -153,7 +153,7 @@ export default function LandingPage() {
         <section id="pigistes" className="scroll-mt-20 py-20 sm:py-24">
           <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-wider text-corail">Pour les pigistes</p>
+              <p className="text-sm font-semibold uppercase tracking-wider text-encre-clair">Pour les pigistes</p>
               <h2 className="mt-3 font-titre text-3xl font-bold tracking-tight sm:text-4xl">
                 Vos sujets méritent d&apos;être lus
               </h2>
@@ -182,7 +182,7 @@ export default function LandingPage() {
             <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {ETAPES.map((e) => (
                 <div key={e.n}>
-                  <span className="grid h-12 w-12 place-items-center rounded-full bg-corail font-titre text-xl font-bold">
+                  <span className="grid h-12 w-12 place-items-center rounded-full bg-jaune font-titre text-encre text-xl font-bold">
                     {e.n}
                   </span>
                   <h3 className="mt-5 font-titre text-xl font-bold">{e.titre}</h3>
@@ -203,7 +203,7 @@ export default function LandingPage() {
               {AVANTAGES.map((a, i) => (
                 <div
                   key={a.titre}
-                  className={`rounded-3xl p-7 ${i === 0 ? "bg-corail-pale" : "border border-black/5 bg-white"}`}
+                  className={`rounded-3xl p-7 ${i === 0 ? "bg-jaune-pale" : "border border-black/5 bg-white"}`}
                 >
                   <h3 className="font-titre text-xl font-bold">{a.titre}</h3>
                   <p className="mt-2 text-sm text-gray-700">{a.texte}</p>
@@ -216,21 +216,21 @@ export default function LandingPage() {
         {/* Tarif */}
         <section id="tarif" className="scroll-mt-20 px-4 pb-20 sm:px-6 sm:pb-24">
           <div className="mx-auto grid max-w-5xl gap-5 md:grid-cols-2">
-            <div className="rounded-3xl bg-creme p-8">
-              <p className="text-sm font-semibold uppercase tracking-wider text-corail">Rédactions</p>
+            <div className="rounded-3xl bg-fond p-8">
+              <p className="text-sm font-semibold uppercase tracking-wider text-encre-clair">Rédactions</p>
               <p className="mt-4 font-titre text-5xl font-extrabold">
                 49 €<span className="text-lg font-semibold text-gray-500"> / mois</span>
               </p>
               <p className="mt-3 text-sm text-gray-700">Sans engagement. Pitchs, annuaire, commandes et suivi des budgets inclus.</p>
               <Link
                 href="/inscription?type=redaction"
-                className="mt-6 inline-flex rounded-full bg-corail px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-corail-fonce"
+                className="mt-6 inline-flex rounded-full bg-jaune px-6 py-3 text-sm font-semibold text-encre transition-colors hover:bg-jaune-fonce"
               >
                 Commencer
               </Link>
             </div>
             <div className="rounded-3xl border border-black/5 p-8">
-              <p className="text-sm font-semibold uppercase tracking-wider text-corail">Pigistes</p>
+              <p className="text-sm font-semibold uppercase tracking-wider text-encre-clair">Pigistes</p>
               <p className="mt-4 font-titre text-5xl font-extrabold">Gratuit</p>
               <p className="mt-3 text-sm text-gray-700">Pour toujours. Proposez vos sujets, recevez des offres, rendez vos articles.</p>
               <Link
@@ -252,7 +252,7 @@ export default function LandingPage() {
 function MockBonDeCommande() {
   return (
     <div className="relative">
-      <div aria-hidden className="absolute -inset-4 -rotate-2 rounded-[2rem] bg-rose/60" />
+      <div aria-hidden className="absolute -inset-4 -rotate-2 rounded-[2rem] bg-jaune/70" />
       <div className="relative rounded-3xl bg-white p-6 shadow-xl">
         <div className="flex items-center justify-between">
           <p className="font-titre text-lg font-bold">Bon de commande</p>
@@ -266,14 +266,14 @@ function MockBonDeCommande() {
             ["Format", "Reportage"],
             ["Longueur", "6 000 signes"],
           ].map(([k, v]) => (
-            <div key={k} className="rounded-2xl bg-creme p-3">
+            <div key={k} className="rounded-2xl bg-fond p-3">
               <dt className="text-xs text-gray-500">{k}</dt>
               <dd className="mt-1 font-semibold">{v}</dd>
             </div>
           ))}
         </dl>
         <div className="mt-5 flex items-center gap-3 rounded-2xl border border-black/5 p-3 text-sm">
-          <span aria-hidden className="grid h-9 w-9 place-items-center rounded-full bg-corail text-xs font-bold text-white">
+          <span aria-hidden className="grid h-9 w-9 place-items-center rounded-full bg-jaune text-xs font-bold text-encre">
             CL
           </span>
           <div>
@@ -289,13 +289,13 @@ function MockBonDeCommande() {
 function MockPitch() {
   return (
     <div className="relative">
-      <div aria-hidden className="absolute -inset-4 rotate-2 rounded-[2rem] bg-corail-pale" />
+      <div aria-hidden className="absolute -inset-4 rotate-2 rounded-[2rem] bg-encre-pale" />
       <div className="relative rounded-3xl bg-white p-6 shadow-xl">
         <p className="font-titre text-lg font-bold">Mon pitch</p>
         <p className="mt-1 text-sm text-gray-500">« Ces villages qui rachètent leur dernier café »</p>
         <ul className="mt-6 space-y-3 text-sm">
           {[
-            ["Le Quotidien du Sud", "Offre reçue · 280 €", "bg-rose text-encre"],
+            ["Le Quotidien du Sud", "Offre reçue · 280 €", "bg-jaune text-encre"],
             ["Hebdo Société", "Vu", "bg-gray-100 text-gray-600"],
             ["Revue Territoires", "Envoyé", "bg-gray-100 text-gray-600"],
           ].map(([media, statut, cls]) => (

@@ -39,26 +39,26 @@ export default function HeroTabs() {
             aria-selected={actif === cle}
             onClick={() => setActif(cle)}
             className={`rounded-t-xl px-4 py-2.5 text-sm font-medium transition-colors ${
-              actif === cle ? "bg-white text-encre" : "bg-white/40 text-encre/70 hover:bg-white/60"
+              actif === cle ? "bg-white text-encre" : "bg-white/15 text-white hover:bg-white/25"
             }`}
           >
             {ONGLETS[cle].label}
           </button>
         ))}
       </div>
-      <div role="tabpanel" className="rounded-b-2xl rounded-tr-2xl bg-white p-6 shadow-xl shadow-corail-fonce/10">
+      <div role="tabpanel" className="rounded-b-2xl rounded-tr-2xl bg-white p-6 shadow-xl shadow-encre/20">
         <p className="font-titre text-xl font-semibold text-encre">{o.titre}</p>
         <ul className="mt-4 space-y-2">
           {o.points.map((p) => (
             <li key={p} className="flex items-start gap-2 text-sm text-gray-700">
-              <span aria-hidden className="mt-0.5 text-corail">✓</span>
+              <span aria-hidden className="mt-0.5 text-encre-clair">✓</span>
               {p}
             </li>
           ))}
         </ul>
         <Link
           href={o.href}
-          className="mt-6 flex w-full items-center justify-center rounded-full bg-corail px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-corail-fonce"
+          className="mt-6 flex w-full items-center justify-center rounded-full bg-jaune px-6 py-3 text-sm font-semibold text-encre transition-colors hover:bg-jaune-fonce"
         >
           {o.cta}
         </Link>
