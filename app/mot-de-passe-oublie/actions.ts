@@ -21,5 +21,11 @@ export async function requestPasswordResetAction(email: string) {
   const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
     redirectTo: `${origin}/reinitialiser-mot-de-passe`,
   });
+  if (error?.code === "over_email_send_rate_limit" || error?.status === 429) {
+    return {
+      error:
+        "Trop de demandes d'email en peu de temps. Réessayez dans une heure environ.",
+    };
+  }
   return { error: error?.message || null };
 }
