@@ -6,6 +6,9 @@ import type { BonDeCommande, StatutArticle } from "@/lib/types";
 export type CommandeVue = BonDeCommande & {
   titre: string; // titre du pitch, ou "Commission directe"
   pitchId: string | null;
+  // Pigiste concerné : rattaché au bon de commande, ou auteur du pitch tant
+  // que l'offre n'a pas été acceptée.
+  pigisteId: string | null;
   dernierArticle: StatutArticle | null;
 };
 
@@ -55,10 +58,11 @@ async function enrichir(supabase: SupabaseClient, bcs: BonDeCommande[]): Promise
     : { data: [] as { id: string; pitch: string }[] };
   const pitchIds = [...new Set((envois || []).map((e) => e.pitch))];
   const { data: pitches } = pitchIds.length
-    ? await supabase.from("pitches").select("id, titre").in("id", pitchIds)
-    : { data: [] as { id: string; titre: string }[] };
+    ? await supabase.from("pitches").select("id, titre, auteur").in("id", pitchIds)
+    : { data: [] as { id: string; titre: string; auteur: string }[] };
   const envoiToPitch = new Map((envois || []).map((e) => [e.id, e.pitch]));
   const pitchTitre = new Map((pitches || []).map((p) => [p.id, p.titre]));
+  const pitchAuteur = new Map((pitches || []).map((p) => [p.id, p.auteur]));
 
   const { data: articles } = await supabase
     .from("articles")
@@ -78,6 +82,7 @@ async function enrichir(supabase: SupabaseClient, bcs: BonDeCommande[]): Promise
     return {
       ...b,
       pitchId,
+      pigisteId: b.pigiste || (pitchId && pitchAuteur.get(pitchId)) || null,
       titre: (pitchId && pitchTitre.get(pitchId)) || "Commission directe",
       dernierArticle: dernier.get(b.id)?.statut || null,
     };

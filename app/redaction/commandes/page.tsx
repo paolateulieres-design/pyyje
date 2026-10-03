@@ -14,7 +14,7 @@ export default async function OffresCommandesPage() {
 
   const commandes = await commandesDeLaRedaction(supabase, userId);
 
-  const pigisteIds = [...new Set(commandes.map((c) => c.pigiste).filter(Boolean))] as string[];
+  const pigisteIds = [...new Set(commandes.map((c) => c.pigisteId).filter(Boolean))] as string[];
   const { data: pigistes } = pigisteIds.length
     ? await supabase.from("profiles").select("id, prenom, nom, email").in("id", pigisteIds)
     : { data: [] as { id: string; prenom: string | null; nom: string | null; email: string }[] };
@@ -35,10 +35,10 @@ export default async function OffresCommandesPage() {
           </p>
         )}
         {commandes.map((c) => {
-          const p = c.pigiste ? pigisteMap.get(c.pigiste) : null;
+          const p = c.pigisteId ? pigisteMap.get(c.pigisteId) : null;
           const nomPigiste = p
             ? `${p.prenom || ""} ${p.nom || ""}`.trim() || p.email
-            : c.email_invite || "Pigiste";
+            : c.email_invite || "Compte supprimé";
           const etape = etapeDe(c);
           return (
             <Link
