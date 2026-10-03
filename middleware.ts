@@ -10,6 +10,7 @@ const PUBLIC_PATHS = [
   "/cgu",
   "/mot-de-passe-oublie",
   "/reinitialiser-mot-de-passe",
+  "/auth/confirm",
 ];
 
 export async function middleware(request: NextRequest) {

@@ -62,15 +62,14 @@ export default async function CommissionDirectePage({
           {inviteLink ? (
             <>
               {" "}
-              Ce pigiste n&apos;a pas encore de compte PYYJE : transmettez-lui ce lien
-              d&apos;invitation (aucun service d&apos;envoi d&apos;email n&apos;est
-              encore branché) :
+              Ce pigiste n&apos;a pas encore de compte PYYJE : une invitation lui a été
+              envoyée par email. Vous pouvez aussi lui transmettre ce lien vous-même :
               <div className="mt-2 break-all rounded bg-white p-2 font-mono text-xs">
                 {inviteLink}
               </div>
             </>
           ) : (
-            " Le pigiste, déjà inscrit, a été notifié directement sur la plateforme."
+            " Le pigiste, déjà inscrit, a été notifié sur la plateforme et par email."
           )}
         </div>
       )}

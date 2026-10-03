@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PublicHeader from "@/components/PublicHeader";
 import { createClient } from "@/lib/supabase/client";
 
@@ -8,6 +8,14 @@ export default function MotDePasseOubliePage() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sent" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+
+  // Retour de /auth/confirm avec un lien expiré ou déjà utilisé.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("lien") === "invalide") {
+      setErrorMsg("Ce lien a expiré ou a déjà été utilisé. Demandez-en un nouveau.");
+      setStatus("error");
+    }
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

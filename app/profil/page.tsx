@@ -2,6 +2,7 @@ import AppShell from "@/components/AppShell";
 import { requireUser } from "@/lib/auth-helpers";
 import { navLinksFor } from "@/lib/nav";
 import { updateProfileAction, updatePasswordAction } from "./actions";
+import { SPECIALITES } from "@/lib/specialites";
 import Link from "next/link";
 
 export default async function ProfilPage({
@@ -63,15 +64,26 @@ export default async function ProfilPage({
               <label className="label">Bio</label>
               <textarea name="bio" defaultValue={profile.bio || ""} className="input" rows={4} />
             </div>
-            <div>
-              <label className="label">Spécialités (séparées par des virgules)</label>
-              <input
-                name="specialites"
-                defaultValue={(profile.specialites || []).join(", ")}
-                className="input"
-                placeholder="politique, culture, sport"
-              />
-            </div>
+            <fieldset>
+              <legend className="label">Spécialités</legend>
+              <div className="mt-1 flex flex-wrap gap-2">
+                {SPECIALITES.map((s) => (
+                  <label
+                    key={s}
+                    className="flex cursor-pointer items-center gap-1.5 rounded-full border border-gray-200 px-3 py-1 text-sm text-gray-700 has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50 has-[:checked]:text-brand-700"
+                  >
+                    <input
+                      type="checkbox"
+                      name="specialites"
+                      value={s}
+                      defaultChecked={(profile.specialites || []).includes(s)}
+                      className="accent-brand-500"
+                    />
+                    {s}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
             <div>
               <label className="label">Portfolio (lien principal)</label>
               <input name="portfolio_url" defaultValue={profile.portfolio_url || ""} className="input" />

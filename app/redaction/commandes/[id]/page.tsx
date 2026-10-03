@@ -6,7 +6,7 @@ import { STATUT_LABELS } from "@/lib/types";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-// Page de détail d'une commission directe côté rédaction. Contrairement à
+// Page de détail d'une offre (sur pitch ou commission directe) côté rédaction. Contrairement à
 // /redaction/articles/[id], accessible même quand aucun article n'a encore
 // été soumis (BC encore "propose" ou "accepte") — cf. demande utilisateur :
 // l'historique doit permettre de voir CE qui a été proposé et à qui, à
@@ -26,13 +26,23 @@ export default async function CommandeDetailRedactionPage({
     .eq("id", id)
     .single();
 
-  if (!bc || bc.redaction !== userId) redirect("/redaction/commission-directe");
+  if (!bc || bc.redaction !== userId) redirect("/redaction/commandes");
 
-  const { data: pigisteProfile } = bc.pigiste
+  // Offre faite sur un pitch : on remonte au pitch pour le titre et l'auteur
+  // (le pigiste n'est rattaché au bon de commande qu'à l'acceptation).
+  const { data: envoi } = bc.pitch_envoi
+    ? await supabase.from("pitch_envois").select("id, pitch").eq("id", bc.pitch_envoi).single()
+    : { data: null };
+  const { data: pitch } = envoi
+    ? await supabase.from("pitches").select("titre, auteur").eq("id", envoi.pitch).single()
+    : { data: null };
+
+  const pigisteId = bc.pigiste || pitch?.auteur || null;
+  const { data: pigisteProfile } = pigisteId
     ? await supabase
         .from("profiles")
         .select("prenom, nom, email")
-        .eq("id", bc.pigiste)
+        .eq("id", pigisteId)
         .single()
     : { data: null };
 
@@ -52,9 +62,17 @@ export default async function CommandeDetailRedactionPage({
 
   return (
     <AppShell profile={profile} navLinks={navLinksFor("redaction")}>
-      <h1 className="text-xl font-semibold text-gray-900">
-        Commission directe — {nomPigiste}
+      <Link href="/redaction/commandes" className="text-sm text-brand-600">
+        ← Offres & commandes
+      </Link>
+      <h1 className="mt-2 text-xl font-semibold text-gray-900">
+        {pitch ? `Offre — « ${pitch.titre} »` : "Commission directe"} — {nomPigiste}
       </h1>
+      {envoi && (
+        <Link href={`/redaction/pitchs/${envoi.id}`} className="mt-1 block text-sm text-brand-600 underline">
+          Voir le pitch
+        </Link>
+      )}
       <span className="badge badge-blue mt-2">
         {STATUT_LABELS[bc.statut] || bc.statut}
       </span>

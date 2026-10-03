@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth-helpers";
 import { uploadAvatar, uploadFiche } from "@/lib/storage";
+import { normaliseSpecialite } from "@/lib/specialites";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -11,10 +12,10 @@ export async function updateProfileAction(formData: FormData) {
   const supabase = await createClient();
 
   if (profile.type_compte === "pigiste") {
-    const specialites = String(formData.get("specialites") || "")
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
+    const specialites = formData
+      .getAll("specialites")
+      .map((s) => normaliseSpecialite(String(s)))
+      .filter((s): s is string => !!s);
 
     const portfolio_liens = String(formData.get("portfolio_liens") || "")
       .split("\n")

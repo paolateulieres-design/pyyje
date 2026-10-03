@@ -140,7 +140,9 @@ export async function respondCommissionAction(bcId: string, decision: "accepte" 
     .eq("id", bcId)
     .single();
 
-  if (!bc || bc.pigiste !== userId) redirect("/pigiste");
+  if (!bc || bc.pigiste !== userId) redirect("/pigiste/commandes");
+  // Les offres sur pitch passent par acceptOfferAction (fermeture des autres envois).
+  if (bc.pitch_envoi) redirect("/pigiste/commandes");
 
   await supabase.from("bons_de_commande").update({ statut: decision }).eq("id", bcId);
   await notify(
@@ -149,13 +151,13 @@ export async function respondCommissionAction(bcId: string, decision: "accepte" 
     decision === "accepte"
       ? "Le pigiste a accepté votre commission directe"
       : "Le pigiste a refusé votre commission directe",
-    `/redaction/articles`
+    `/redaction/commandes/${bcId}`
   );
 
   if (decision === "accepte") {
     redirect(`/pigiste/article/${bcId}`);
   }
-  redirect("/pigiste");
+  redirect("/pigiste/commandes");
 }
 
 // WF4 — Soumission / re-soumission de l'article.

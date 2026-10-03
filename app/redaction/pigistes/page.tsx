@@ -2,6 +2,7 @@ import AppShell from "@/components/AppShell";
 import { requireRole } from "@/lib/auth-helpers";
 import { navLinksFor } from "@/lib/nav";
 import { createClient } from "@/lib/supabase/server";
+import { SPECIALITES, normaliseSpecialite } from "@/lib/specialites";
 import Link from "next/link";
 
 export default async function AnnuairePigistesPage({
@@ -10,7 +11,7 @@ export default async function AnnuairePigistesPage({
   searchParams: Promise<{ specialite?: string }>;
 }) {
   const { profile } = await requireRole(["redaction"]);
-  const { specialite } = await searchParams;
+  const specialite = normaliseSpecialite((await searchParams).specialite || "");
   const supabase = await createClient();
 
   let query = supabase
@@ -24,9 +25,6 @@ export default async function AnnuairePigistesPage({
   }
 
   const { data: pigistes } = await query.order("nom", { ascending: true });
-
-  // Suggestions de filtre : les rubriques que cette rédaction a elle-même configurées.
-  const rubriquesSuggestions = profile.rubriques || [];
 
   return (
     <AppShell profile={profile} navLinks={navLinksFor("redaction")}>
@@ -42,7 +40,7 @@ export default async function AnnuairePigistesPage({
         >
           Tous
         </a>
-        {rubriquesSuggestions.map((r) => (
+        {SPECIALITES.map((r) => (
           <a
             key={r}
             href={`/redaction/pigistes?specialite=${encodeURIComponent(r)}`}

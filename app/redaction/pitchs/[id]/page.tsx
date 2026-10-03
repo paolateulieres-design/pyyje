@@ -35,6 +35,15 @@ export default async function PitchEnvoiDetailPage({
 
   const peutRepondre = envoi.statut === "vu";
 
+  // Offre déjà envoyée sur ce pitch : on l'affiche au lieu de la perdre de vue.
+  const { data: offre } = await supabase
+    .from("bons_de_commande")
+    .select("*")
+    .eq("pitch_envoi", envoi.id)
+    .order("date_creation", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
   return (
     <AppShell profile={profile} navLinks={navLinksFor("redaction")}>
       <Link href="/redaction/pitchs" className="text-sm text-brand-600">
@@ -71,6 +80,27 @@ export default async function PitchEnvoiDetailPage({
               </a>
             </p>
           )}
+        </div>
+      )}
+
+      {offre && (
+        <div className="card mt-4 max-w-2xl">
+          <div className="flex items-center justify-between gap-4">
+            <h3 className="font-semibold text-gray-900">Votre offre</h3>
+            <span className="badge badge-blue">{STATUT_LABELS[offre.statut] || offre.statut}</span>
+          </div>
+          <p className="mt-2 text-2xl font-bold text-brand-700">{offre.prix} €</p>
+          <p className="mt-1 text-sm text-gray-600">
+            {offre.format} · {offre.nb_signes} signes · deadline{" "}
+            {new Date(offre.deadline).toLocaleDateString("fr-FR")}
+          </p>
+          {offre.notes && <p className="mt-2 text-sm text-gray-500">{offre.notes}</p>}
+          <Link
+            href={`/redaction/commandes/${offre.id}`}
+            className="mt-3 inline-block text-sm font-medium text-brand-600 underline"
+          >
+            Suivre cette commande
+          </Link>
         </div>
       )}
 

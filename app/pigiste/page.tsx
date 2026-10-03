@@ -2,6 +2,7 @@ import AppShell from "@/components/AppShell";
 import { requireRole } from "@/lib/auth-helpers";
 import { navLinksFor } from "@/lib/nav";
 import { createClient } from "@/lib/supabase/server";
+import { commandesDuPigiste, etapeDe } from "@/lib/commandes";
 import Link from "next/link";
 
 export default async function PigisteDashboard() {
@@ -13,33 +14,22 @@ export default async function PigisteDashboard() {
     .select("*")
     .eq("auteur", userId);
 
-  const pitchIds = (pitches || []).map((p) => p.id);
-
-  const { data: envois } = pitchIds.length
-    ? await supabase.from("pitch_envois").select("*").in("pitch", pitchIds)
-    : { data: [] as any[] };
-
-  const offresEnAttente = (envois || []).filter((e) => e.statut === "offre_faite").length;
-
-  const { data: mesBCs } = await supabase
-    .from("bons_de_commande")
-    .select("id")
-    .eq("pigiste", userId);
-  const bcIds = (mesBCs || []).map((b) => b.id);
-
-  const { data: articles } = bcIds.length
-    ? await supabase.from("articles").select("*").in("bon_de_commande", bcIds)
-    : { data: [] as any[] };
-
-  const enCours = (articles || []).filter((a) => a.statut !== "valide").length;
-  const valides = (articles || []).filter((a) => a.statut === "valide").length;
+  // Compte les offres sur pitch ET les commissions directes (avant, seules
+  // les offres sur pitch étaient comptées).
+  const commandes = await commandesDuPigiste(supabase, userId);
+  const etapes = commandes.map(etapeDe);
+  const offresEnAttente = etapes.filter((e) => e === "a_repondre").length;
+  const enCours = etapes.filter((e) =>
+    ["a_rediger", "corrections", "en_relecture"].includes(e)
+  ).length;
+  const valides = etapes.filter((e) => e === "validee").length;
   const pitchsActifs = (pitches || []).filter((p) => p.statut !== "cloture").length;
 
   const stats = [
-    { label: "Pitchs actifs", value: pitchsActifs },
-    { label: "Offres reçues en attente", value: offresEnAttente },
-    { label: "Articles en cours", value: enCours },
-    { label: "Articles validés", value: valides },
+    { label: "Pitchs actifs", value: pitchsActifs, href: "/pigiste/pitchs" },
+    { label: "Offres reçues en attente", value: offresEnAttente, href: "/pigiste/commandes#offres" },
+    { label: "Articles en cours", value: enCours, href: "/pigiste/commandes#en-cours" },
+    { label: "Articles validés", value: valides, href: "/pigiste/historique" },
   ];
 
   return (
@@ -47,10 +37,10 @@ export default async function PigisteDashboard() {
       <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
         {stats.map((s) => (
-          <div key={s.label} className="card">
+          <Link key={s.label} href={s.href} className="card transition-colors hover:border-brand-500">
             <p className="text-2xl font-bold text-brand-700">{s.value}</p>
             <p className="mt-1 text-sm text-gray-500">{s.label}</p>
-          </div>
+          </Link>
         ))}
       </div>
 

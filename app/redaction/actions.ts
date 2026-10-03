@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/auth-helpers";
 import { notify } from "@/lib/notifications";
+import { sendEmail, siteUrl } from "@/lib/email";
 import { uploadAvatar } from "@/lib/storage";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -82,7 +83,7 @@ export async function makeOfferAction(formData: FormData) {
   }
 
   revalidatePath(`/redaction/pitchs/${envoiId}`);
-  redirect("/redaction/pitchs");
+  redirect(`/redaction/pitchs/${envoiId}`);
 }
 
 // WF0 — Commission directe.
@@ -142,8 +143,21 @@ export async function createDirectCommissionAction(formData: FormData) {
     redirect(`/redaction/commission-directe?ok=1&bc=${bc!.id}`);
   }
 
-  // Pas de service d'envoi d'email branché dans ce MVP : la rédaction
-  // récupère le lien d'invitation à transmettre elle-même au pigiste.
+  // Pigiste pas encore inscrit : invitation par email. Le lien reste affiché
+  // à la rédaction au cas où l'email n'arriverait pas (ou si l'envoi n'est
+  // pas configuré).
+  const { data: media } = await supabase
+    .from("profiles")
+    .select("nom_media")
+    .eq("id", userId)
+    .single();
+  await sendEmail({
+    to: email,
+    subject: `${media?.nom_media || "Une rédaction"} vous propose une pige sur PYYJE`,
+    texte: `${media?.nom_media || "Une rédaction"} vous propose une pige (${format}, ${prix} €). Créez votre compte PYYJE pour consulter la proposition et y répondre.`,
+    lien: siteUrl(`/invite/${token}`),
+    bouton: "Voir la proposition",
+  });
   redirect(`/redaction/commission-directe?ok=1&bc=${bc!.id}&token=${token}`);
 }
 

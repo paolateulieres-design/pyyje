@@ -26,7 +26,20 @@ export default async function CommandeDetailPage({
     .eq("id", id)
     .single();
 
-  if (!bc || bc.pigiste !== userId) redirect("/pigiste");
+  if (!bc) redirect("/pigiste/commandes");
+
+  // Une offre sur pitch se traite depuis la page du pitch, qui ferme
+  // automatiquement les envois aux autres rédactions à l'acceptation.
+  if (bc.source === "pitch_accepte" && bc.statut === "propose" && bc.pitch_envoi) {
+    const { data: envoi } = await supabase
+      .from("pitch_envois")
+      .select("pitch")
+      .eq("id", bc.pitch_envoi)
+      .single();
+    if (envoi) redirect(`/pigiste/pitchs/${envoi.pitch}`);
+  }
+
+  if (bc.pigiste !== userId) redirect("/pigiste/commandes");
 
   const { data: redaction } = await supabase
     .from("profiles")

@@ -43,8 +43,8 @@ export async function signUpAction(formData: FormData) {
 
   const userId = data.user!.id;
 
-  // Notifie les admins (fonction SECURITY DEFINER, fonctionne sans session active).
-  await supabase.rpc("notify_admins_new_account", { p_email: email });
+  // Les admins sont notifiés par le trigger handle_new_user (cf.
+  // supabase/migrations/20261003_securite_specialites.sql).
 
   // WF0 étape 4 : commission directe — lier automatiquement le compte
   // fraîchement créé au BonDeCommande en attente (autorisé par la policy RLS

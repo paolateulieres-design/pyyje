@@ -13,6 +13,7 @@ export function navLinksFor(type: TypeCompte) {
       { href: "/redaction/pitchs", label: "Pitchs reçus" },
       { href: "/redaction/pigistes", label: "Annuaire pigistes" },
       { href: "/redaction/commission-directe", label: "Commission directe" },
+      { href: "/redaction/commandes", label: "Offres & commandes" },
       { href: "/redaction/articles", label: "Articles en cours" },
       { href: "/redaction/profil", label: "Profil média & rubriques" },
     ];
@@ -21,6 +22,7 @@ export function navLinksFor(type: TypeCompte) {
     { href: "/pigiste", label: "Dashboard" },
     { href: "/pigiste/pitchs", label: "Mes pitchs" },
     { href: "/pigiste/pitchs/nouveau", label: "Nouveau pitch" },
+    { href: "/pigiste/commandes", label: "Mes commandes" },
     { href: "/pigiste/historique", label: "Historique" },
   ];
 }
