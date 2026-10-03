@@ -93,7 +93,7 @@ export default async function MesCommandesPage() {
                       </p>
                     </div>
                     <span className={`badge ${ETAPE_BADGES[etape]} shrink-0`}>
-                      {ETAPE_LABELS[etape]}
+                      {etape === "a_repondre" ? "À accepter ou refuser" : ETAPE_LABELS[etape]}
                     </span>
                   </Link>
                 );
