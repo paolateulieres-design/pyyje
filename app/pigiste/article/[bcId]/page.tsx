@@ -55,20 +55,20 @@ export default async function MonArticlePage({
         <span className="badge badge-blue mt-2">{STATUT_LABELS[latest.statut] || latest.statut}</span>
       )}
 
-      {canEdit && ficheManquante && (
+      {ficheManquante && (
         <div className="card mt-6 max-w-2xl border-yellow-200 bg-yellow-50">
           <p className="text-sm text-yellow-800">
-            Vous devez d&apos;abord uploader votre fiche de renseignement (obligatoire pour
-            soumettre un article) depuis{" "}
+            Pensez à ajouter votre fiche de renseignement dans{" "}
             <a href="/profil" className="font-medium underline">
               votre profil
             </a>
-            .
+            . Elle n&apos;est pas nécessaire pour rendre l&apos;article, mais la rédaction en
+            aura besoin pour vous payer une fois la pige validée.
           </p>
         </div>
       )}
 
-      {canEdit && !ficheManquante ? (
+      {canEdit ? (
         <form action={submitArticleAction} className="card mt-6 max-w-2xl space-y-4">
           <input type="hidden" name="bon_de_commande" value={bcId} />
           <div>

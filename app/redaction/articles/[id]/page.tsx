@@ -69,6 +69,9 @@ export default async function RelectureArticlePage({
               </a>
             </>
           )}
+          {!ficheUrl && (
+            <span className="text-yellow-700"> · Fiche de renseignement pas encore fournie</span>
+          )}
         </p>
       )}
 
@@ -118,7 +121,15 @@ export default async function RelectureArticlePage({
         </div>
       )}
 
-      {latest.statut === "valide" && (
+      {latest.statut === "valide" && !ficheUrl && !bc.paiement_effectue && (
+        <p className="mt-6 max-w-2xl rounded-lg bg-yellow-50 p-4 text-sm text-yellow-800">
+          Le pigiste n&apos;a pas encore fourni sa fiche de renseignement (RIB, sécurité
+          sociale…). Il a été prévenu : le paiement pourra être déclenché dès qu&apos;elle
+          sera ajoutée à son profil.
+        </p>
+      )}
+
+      {latest.statut === "valide" && (ficheUrl || bc.paiement_effectue) && (
         <form action={togglePaiementAction.bind(null, bc.id, !bc.paiement_effectue)} className="mt-6">
           <button className={bc.paiement_effectue ? "btn-secondary" : "btn-primary"}>
             {bc.paiement_effectue ? "Paiement marqué effectué ✓ (annuler)" : "Marquer le paiement comme effectué"}

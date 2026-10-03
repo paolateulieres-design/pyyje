@@ -114,7 +114,9 @@ export default async function ProfilPage({
               )}
               <input type="file" name="fiche_file" accept="application/pdf" className="input" />
               <p className="mt-1 text-xs text-gray-500">
-                Obligatoire pour soumettre un article. Les pitchs ne sont pas bloqués.
+                Nécessaire pour être payé·e une fois une pige validée. Vous pouvez
+                l&apos;ajouter plus tard : elle ne bloque ni les pitchs ni l&apos;envoi
+                d&apos;articles.
               </p>
             </div>
           </>

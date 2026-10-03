@@ -215,7 +215,21 @@ export async function validateArticleAction(articleId: string) {
   }
 
   if (bc.pigiste) {
-    await notify(supabase, bc.pigiste, "Article validé — paiement à déclencher", `/pigiste/historique`);
+    const { data: pigiste } = await supabase
+      .from("profiles")
+      .select("fiche_renseignement")
+      .eq("id", bc.pigiste)
+      .single();
+    if (pigiste?.fiche_renseignement) {
+      await notify(supabase, bc.pigiste, "Article validé — paiement à déclencher", `/pigiste/historique`);
+    } else {
+      await notify(
+        supabase,
+        bc.pigiste,
+        "Article validé ! Ajoutez votre fiche de renseignement pour que la rédaction puisse vous payer",
+        `/profil`
+      );
+    }
   }
 
   revalidatePath(`/redaction/articles/${bc.id}`);
@@ -226,8 +240,22 @@ export async function validateArticleAction(articleId: string) {
 export async function togglePaiementAction(bcId: string, value: boolean) {
   const { userId } = await requireRole(["redaction"]);
   const supabase = await createClient();
-  const { data: bc } = await supabase.from("bons_de_commande").select("redaction").eq("id", bcId).single();
+  const { data: bc } = await supabase
+    .from("bons_de_commande")
+    .select("redaction, pigiste")
+    .eq("id", bcId)
+    .single();
   if (!bc || bc.redaction !== userId) return;
+
+  // Pas de paiement sans fiche de renseignement (RIB, sécu...).
+  if (value && bc.pigiste) {
+    const { data: pigiste } = await supabase
+      .from("profiles")
+      .select("fiche_renseignement")
+      .eq("id", bc.pigiste)
+      .single();
+    if (!pigiste?.fiche_renseignement) return;
+  }
   await supabase.from("bons_de_commande").update({ paiement_effectue: value }).eq("id", bcId);
   revalidatePath("/redaction/articles");
 }

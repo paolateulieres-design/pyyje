@@ -162,7 +162,7 @@ export async function respondCommissionAction(bcId: string, decision: "accepte" 
 
 // WF4 — Soumission / re-soumission de l'article.
 export async function submitArticleAction(formData: FormData) {
-  const { userId, profile } = await requireRole(["pigiste"]);
+  const { userId } = await requireRole(["pigiste"]);
   const supabase = await createClient();
 
   const bonDeCommandeId = String(formData.get("bon_de_commande") || "");
@@ -176,10 +176,8 @@ export async function submitArticleAction(formData: FormData) {
 
   if (!bc || bc.pigiste !== userId) redirect("/pigiste");
 
-  // Règle métier : soumission bloquée sans fiche de renseignement uploadée.
-  if (!profile.fiche_renseignement) {
-    redirect(`/pigiste/article/${bonDeCommandeId}?error=fiche_manquante`);
-  }
+  // La fiche de renseignement n'est plus exigée pour soumettre : elle ne
+  // conditionne que le paiement, une fois la pige validée (cf. redaction/actions).
 
   const { data: last } = await supabase
     .from("articles")
